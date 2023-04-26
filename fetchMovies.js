@@ -4,7 +4,8 @@ const createMovie = (movie) => {
         id: movie.id,
         title: movie.title,
         rating: movie.popularity,
-        releaseDate: movie.release_date
+        releaseDate: movie.release_date,
+        posterUrl: movie.poster_path
     }
     return res
 }

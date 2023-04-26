@@ -5,17 +5,13 @@ const sequelize = require("./db.config")
 
 const app = express();
 
-var corsOptions = {
-  origin: "http://localhost:8081"
-};
-
 app.use(cors());
 
 app.use(express.json());
 
 app.use(express.urlencoded({ extended: true }));
 
-sequelize.sync({force: true}).then(() => {
+sequelize.sync().then(() => {
     console.log('Connection has been established successfully.');
  }).catch((error) => {
     console.error('Unable to connect to the database: ', error);
@@ -24,9 +20,11 @@ sequelize.sync({force: true}).then(() => {
 
 const movies = require("./routes/Movie.route")
 const users = require("./routes/User.route")
+const watchList = require("./routes/WatchList.route")
 
 app.use("/api/v1/movies", movies)
 app.use("/api/v1/users", users)
+app.use("/api/v1/watchlist", watchList)
 
 app.get("/", (req, res) => {
   res.json({ message: "Welcome to demo application." });
