@@ -1,6 +1,4 @@
 const axios = require("axios")
-const Movie = require("./models/Movie.model")
-const { addToNotionDatabase } = require("./controllers/Notion.controller")
 const createMovie = (movie) => {
     const res = {
         id: movie.id,
@@ -36,4 +34,6 @@ const addMoviesToSQLDB = ()=> {
         }
     }   
 }
+
+addMoviesToSQLDB()
 

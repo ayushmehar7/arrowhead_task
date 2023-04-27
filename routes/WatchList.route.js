@@ -1,12 +1,14 @@
 const express = require("express")
-const {addMovieToWatchList, getMoviesFromUserWatchList, rateMovie} = require("../controllers/WatchList.controller")
+const {addMovieToWatchList, getMoviesFromUserWatchList, markMovieAsWatched, deleteMovieFromWatchList} = require("../controllers/WatchList.controller")
 
 const router = express.Router();
 
 router.get("/", getMoviesFromUserWatchList)
 
+router.patch("/", markMovieAsWatched)
+
 router.post("/", addMovieToWatchList)
 
-router.patch("/", rateMovie)
+router.delete("/", deleteMovieFromWatchList)
 
 module.exports = router;

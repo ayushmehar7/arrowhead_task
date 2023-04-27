@@ -4,7 +4,7 @@ const Movie = require("../models/Movie.model")
 const User = require("../models/User.model")
 
 
-const WatchList = sequelize.define("watchlist", {
+const Rating = sequelize.define("rating", {
     username: {
         type: Sequelize.DataTypes.STRING,
         primaryKey: true,
@@ -21,17 +21,21 @@ const WatchList = sequelize.define("watchlist", {
             key: 'id'
         }
     },
-    watched: {
-        type: Sequelize.DataTypes.BOOLEAN,
-        defaultValue: false
+    rating: {
+        type: Sequelize.DataTypes.DOUBLE,
+        allowNull: true,
+        validate: {
+            min: 1,
+            max: 5
+        }
     }
 })
 
-WatchList.hasMany(User, {
+Rating.hasMany(User, {
     foreignKey: 'username'
 })
-WatchList.hasMany(Movie, {
+Rating.hasMany(Movie, {
     foreignKey: 'id'
 })
 
-module.exports = WatchList
+module.exports = Rating
