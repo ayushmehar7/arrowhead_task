@@ -6,6 +6,7 @@ import {
   } from "react-router-dom";
 import { LoginForm } from './components/LoginForm.component';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import "bootstrap-icons/font/bootstrap-icons.css";
 import { SignUpForm } from './components/Signup.component';
 import { Home } from './components/Home.component';
 import { WatchList } from './components/Watchlist.component';

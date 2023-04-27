@@ -1,9 +1,11 @@
+const dontenv = require("dotenv")
+dontenv.config()
 const dbConfig = {
-    HOST: "localhost",
-    PORT: "3306",
-    USER: "root",
-    PASSWORD: "7828@sparX",
-    DB: "arrowhead_db",
+    HOST: process.env.SQL_HOST,
+    PORT: process.env.SQL_PORT,
+    USER: process.env.SQL_USER,
+    PASSWORD: process.env.SQL_PASSWORD,
+    DB: process.env.SQL_DB,
     dialect: "mysql",
     pool: {
       max: 5,
@@ -29,4 +31,4 @@ const dbConfig = {
     }
 )
 
-module.exports = sequelize
+module.exports = sequelize;

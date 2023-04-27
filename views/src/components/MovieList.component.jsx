@@ -7,6 +7,7 @@ import Row from "react-bootstrap/esm/Row"
 import movieCard from "../movie-card.png"
 import Col from "react-bootstrap/esm/Col"
 import Cookies from "js-cookie"
+import { Form } from "react-bootstrap"
 
 const IMAGE_URL = "http://image.tmdb.org/t/p/original//";
 
@@ -14,8 +15,33 @@ export const MovieList = ()=> {
     const [movies, setMovies] = useState([])
     const [currentPage, setCurrentPage] = useState(0)
     const [totalPages, setTotalPages] = useState(0)
+    const [searchQuery, setSearchQuery] = useState(null)
     const username = Cookies.get("username")
-    const getMoviePage = () => {
+    const [allMovies, setAllMovies] = useState([])
+    const getMovies = async () => {
+        try{
+            const res = await axios.get("http://localhost:8080/api/v1/movies")
+            setMovies(res.data.movies)
+            setAllMovies(res.data.movies)
+            setTotalPages(parseInt(Math.ceil(res.data.total_movies/10)))
+            setCurrentPage(0)
+        }catch(err){
+            alert(err.response.data.message)
+        }
+    }
+    const searchMovies = ()=> {
+        if(!searchQuery || searchQuery.length === 0) {
+            getMovies()
+            return
+        }
+        console.log(allMovies.length)
+        const filteredMovies = allMovies.filter(movie => movie.title.toLowerCase().includes(searchQuery.toLowerCase()))
+        setMovies(filteredMovies)
+        setTotalPages(parseInt(Math.ceil(filteredMovies.length/10)))
+        setCurrentPage(0)
+        setSearchQuery(null)
+    }
+    const getMoviePage = (movies) => {
         const start = currentPage*10;
         const end = Math.min(start + 10, movies.length);
         return movies.slice(start, end)
@@ -24,7 +50,7 @@ export const MovieList = ()=> {
         setCurrentPage((currentPage + 1)%totalPages)
     }
     const decrementPage = () => {
-        setCurrentPage((currentPage-1+totalPages)%totalPages)
+        setCurrentPage((currentPage -1 + totalPages)%totalPages)
     }
     const addToWatchList = async (movieId)=> {
         try{
@@ -38,21 +64,20 @@ export const MovieList = ()=> {
         }
     }
     useEffect(() => {
-        const getMovies = async () => {
-            try{
-                const res = await axios.get("http://localhost:8080/api/v1/movies")
-                setMovies(res.data.movies)
-                setTotalPages(parseInt(Math.ceil(res.data.total_movies/10)))
-            }catch(err){
-                alert(err.response.data.message)
-            }
-        }
         getMovies()
     }, [])
     return (
         <Container>
+        <Row style={{marginLeft: "350px", marginTop: "5px", marginBottom: "5px"}} className="align-items-center">
+            <Col>
+                <Form.Control type="text" placeholder="Search Movies by Title" onChange={(event) => setSearchQuery(event.target.value)} />
+            </Col>
+            <Col>
+                <Button onClick={searchMovies}><i className="bi bi-search"></i></Button>
+            </Col>
+        </Row>
         <Row>
-            {getMoviePage().map((movie) => (
+            {getMoviePage(movies).map((movie) => (
                 <Card style={{ width: '15rem', margin: "5px 10px"}}>
                 <Card.Img variant="top" style={{height: "300px"}} src={movie.posterUrl ? IMAGE_URL+movie.posterUrl : movieCard} />
                 <Card.Body>

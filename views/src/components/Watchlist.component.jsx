@@ -25,6 +25,13 @@ export const WatchList = () => {
             alert(err.response.data.message)
         }
     }
+    const deleteMovieFromWatchlist = async (movieId) => {
+        try{
+            await axios.delete()
+        }catch(err){
+            alert(err.response.data.message)
+        }
+    }
     const getMovies = async() => {
         const res = await axios.get(`http://localhost:8080/api/v1/watchlist/?username=${username}`)
         setMovies(res.data.movies)
@@ -50,6 +57,19 @@ export const WatchList = () => {
                                 setCurrentMovieId(movie.id)
                                 setShowModal(true)
                             }}>Rate Movie</Button>}
+                            </Col>
+                            <Col>
+                            <Button variant="danger">
+                                <i className="bi bi-trash"></i>
+                            </Button>
+                            </Col>
+                            <Col>
+                            <Button onClick={() => {
+                                setCurrentMovieId(movie.id)
+                                setShowModal(true)
+                            }} variant="primary">
+                                <i className="bi bi-pencil"></i>
+                            </Button>
                             </Col>
                             </Row>
                         </ListGroup.Item>

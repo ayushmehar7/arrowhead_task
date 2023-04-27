@@ -1,7 +1,6 @@
-const sequelize = require("../db.config")
 const Movie = require("../models/Movie.model")
-const User = require("../models/User.model")
 const WatchList = require("../models/WatchList.model")
+const { addToNotionDatabase } = require("./Notion.controller")
 
 exports.addMovieToWatchList = async (req, res) => {
     const watchList = req.body
@@ -49,7 +48,9 @@ exports.rateMovie = (req, res) => {
     const rating = req.body.rating
     const username = req.query.username
     const movieId = req.query.movieId
-    WatchList.update({
+    WatchList.upsert({
+        username: username,
+        movieId: movieId,
         rating: rating
     }, {
         where: {
@@ -57,6 +58,7 @@ exports.rateMovie = (req, res) => {
             movieId: movieId
         }
     }).then(() => {
+        addToNotionDatabase(username, movieId, rating)
         res.status(200).json({
             message: "Movie Rated!"
         })
@@ -66,5 +68,26 @@ exports.rateMovie = (req, res) => {
         res.status(500).json({
             message: "Cannot rate the movie"
         })
+    })
+}
+
+exports.deleteMovieFromWatchList = (req, res) => {
+    const userName = req.query.username
+    const movieId = req.query.movieId;
+    WatchList.destroy({
+        where: {
+            username: userName,
+            movieId: movieId
+        }
+    }).then(() => {
+        res.status(204).json({
+            message: "Movie deleted from watchlist"
+        })
+    })
+    .catch(err => {
+        res.status(500).json({
+            message: "Cannot delete movie from watchlist"
+        })
+        console.log(err)
     })
 }
