@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useEffect, useState, useCallback } from "react"
 import { Container, Col, Row, ListGroup, Form, Button, Modal } from "react-bootstrap"
 import axios from "axios"
 import Cookies from "js-cookie"
@@ -7,14 +7,14 @@ import movieCard from "../movie-card.png"
 const IMAGE_URL = "http://image.tmdb.org/t/p/original//";
 
 export const WatchList = () => {
-    const username = Cookies.get("username")
+    const getUsername = () => Cookies.get("username")
     const [movies, setMovies] = useState([])
     const [showModal, setShowModal] = useState(false)
     const [rating, setRating] = useState(-1);
     const [currentMovieId, setCurrentMovieId] = useState(null)
     const submitRating = async()=>{
         try {
-            await axios.patch(`http://localhost:8080/api/v1/watchlist?username=${username}&movieId=${currentMovieId}`, {
+            await axios.patch(`http://localhost:8080/api/v1/watchlist?username=${getUsername()}&movieId=${currentMovieId}`, {
                 rating: rating
             })
             setRating(-1)
@@ -25,20 +25,13 @@ export const WatchList = () => {
             alert(err.response.data.message)
         }
     }
-    const deleteMovieFromWatchlist = async (movieId) => {
-        try{
-            await axios.delete()
-        }catch(err){
-            alert(err.response.data.message)
-        }
-    }
-    const getMovies = async() => {
-        const res = await axios.get(`http://localhost:8080/api/v1/watchlist/?username=${username}`)
+    const getMovies = useCallback(async() => {
+        const res = await axios.get(`http://localhost:8080/api/v1/watchlist/?username=${getUsername()}`)
         setMovies(res.data.movies)
-    }
+    },[])
     useEffect(() => {
         getMovies()
-    }, [])
+    }, [getMovies])
     return (
         <Container style={{padding: "100px"}}>
             <ListGroup>
@@ -57,11 +50,6 @@ export const WatchList = () => {
                                 setCurrentMovieId(movie.id)
                                 setShowModal(true)
                             }}>Rate Movie</Button>}
-                            </Col>
-                            <Col>
-                            <Button variant="danger">
-                                <i className="bi bi-trash"></i>
-                            </Button>
                             </Col>
                             <Col>
                             <Button onClick={() => {

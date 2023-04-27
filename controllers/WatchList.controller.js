@@ -70,24 +70,3 @@ exports.rateMovie = (req, res) => {
         })
     })
 }
-
-exports.deleteMovieFromWatchList = (req, res) => {
-    const userName = req.query.username
-    const movieId = req.query.movieId;
-    WatchList.destroy({
-        where: {
-            username: userName,
-            movieId: movieId
-        }
-    }).then(() => {
-        res.status(204).json({
-            message: "Movie deleted from watchlist"
-        })
-    })
-    .catch(err => {
-        res.status(500).json({
-            message: "Cannot delete movie from watchlist"
-        })
-        console.log(err)
-    })
-}
