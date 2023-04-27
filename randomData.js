@@ -12,7 +12,7 @@ const registerUser = async (userName, password) => {
 const regsiterRandomUsers = ()=>{
     const baseName = "ayush.mehar."
     const basePassword = "password."
-    for(let i=2;i<=10000;i++){
+    for(let i=1;i<=10000;i++){
         const username = `${baseName}${i}`
         const password = `${basePassword}${i}`
         registerUser(username, password)
@@ -35,7 +35,7 @@ function randomInRange(min, max) {
 const postRandomRating = async(username, movieId)=>{
     try{
         const rating = randomInRange(1, 5)
-        await axios.patch(`http://localhost:8080/api/v1/watchlist?username=${username}&movieId=${movieId}`, {
+        await axios.patch(`http://localhost:8080/api/v1/rating?username=${username}&movieId=${movieId}`, {
             rating: rating
         })
     }catch(err){

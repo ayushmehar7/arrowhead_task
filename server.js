@@ -23,10 +23,12 @@ sequelize.sync().then(() => {
 const movies = require("./routes/Movie.route")
 const users = require("./routes/User.route")
 const watchList = require("./routes/WatchList.route")
+const rating = require("./routes/Rating.route")
 
 app.use("/api/v1/movies", movies)
 app.use("/api/v1/users", users)
 app.use("/api/v1/watchlist", watchList)
+app.use('/api/v1/rating', rating)
 
 app.get("/", (req, res) => {
   res.json({ message: "Welcome to demo application." });
